@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { ResultDisplay } from '@/components/divination'
+import { OracleButton, PageHeader } from '@/components/ui/page-primitives'
 import { useDivination } from '@/hooks/useDivination'
 
 const PERIODS = ['今日', '本周', '本月', '流年'] as const

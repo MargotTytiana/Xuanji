@@ -15,7 +15,7 @@ export default function BaguaResultPage() {
           subtitle={type ? `Result for ${type}` : 'Unknown hexagram'}
         />
 
-        <div style={{ marginTop: '2rem', color: 'var(--text)', lineHeight: '1.8' }}>
+        <div style={{ marginTop: '2rem', color: 'var(--text)', lineHeight: 1.8 }}>
           <p>This page is reserved for hexagram result details.</p>
           <p>If you see this page, your selection was successfully routed.</p>
         </div>

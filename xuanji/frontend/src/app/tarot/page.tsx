@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { CardSpread, ResultDisplay } from '@/components/divination'
+import { OracleButton, PageHeader } from '@/components/ui/page-primitives'
 import { useDivination } from '@/hooks/useDivination'
 
 export default function TarotPage() {

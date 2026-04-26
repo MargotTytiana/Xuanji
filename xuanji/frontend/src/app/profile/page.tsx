@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { PersonalityResult } from '@/components/divination'
+import { PageHeader } from '@/components/ui/page-primitives'
 
 const QUESTIONS = [
   {
