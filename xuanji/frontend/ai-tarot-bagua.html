@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>玄机 · AI塔罗八卦</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Cinzel:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0e0e;
+    --bg2: #161616;
+    --surface: #1c1c1c;
+    --border: rgba(255,255,255,0.08);
+    --text: #e8e4dc;
+    --text-dim: rgba(232,228,220,0.5);
+    --text-faint: rgba(232,228,220,0.2);
+    --accent: #c8b89a;
+    --accent2: #8a7a62;
+    --glow: rgba(200,184,154,0.12);
+    --trigram: #d4c9b0;
+    --white: #f0ece4;
+  }
+  [data-theme="light"] {
+    --bg: #f4f1ec;
+    --bg2: #ede9e2;
+    --surface: #e8e3da;
+    --border: rgba(0,0,0,0.08);
+    --text: #1a1714;
+    --text-dim: rgba(26,23,20,0.5);
+    --text-faint: rgba(26,23,20,0.2);
+    --accent: #6b5a42;
+    --accent2: #9a8870;
+    --glow: rgba(107,90,66,0.1);
+    --trigram: #3a2e1f;
+    --white: #1a1714;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Serif SC', 'Cormorant Garamond', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: background 0.5s, color 0.5s;
+  }
+
+  /* ── NOISE TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; opacity: 0.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem;
+    height: 60px;
+    border-bottom: 1px solid var(--border);
+    background: rgba(14,14,14,0.7);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: background 0.5s;
+  }
+  [data-theme="light"] nav { background: rgba(244,241,236,0.75); }
+
+  .nav-logo {
+    font-family: 'Cinzel', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+    text-transform: uppercase;
+    opacity: 0.9;
+  }
+
+  .nav-actions {
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+
+  .nav-btn {
+    background: none; border: 1px solid var(--border);
+    color: var(--text-dim); cursor: pointer;
+    font-family: inherit; font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    padding: 0.4rem 0.85rem;
+    border-radius: 2px;
+    transition: all 0.25s;
+    display: flex; align-items: center; gap: 0.4rem;
+    white-space: nowrap;
+  }
+  .nav-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--glow);
+  }
+  .nav-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--glow);
+  }
+
+  .nav-divider {
+    width: 1px; height: 18px;
+    background: var(--border);
+    margin: 0 0.2rem;
+  }
+
+  /* ── HERO SECTION ── */
+  #hero {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; align-items: center;
+    overflow: hidden;
+  }
+
+  /* ── BAGUA CONTAINER ── */
+  .bagua-side {
+    position: relative;
+    width: 50%;
+    height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .bagua-wrapper {
+    position: relative;
+    width: min(480px, 80vw); height: min(480px, 80vw);
+  }
+
+  /* Atmospheric glow */
+  .bagua-wrapper::before {
+    content: '';
+    position: absolute; inset: -30%;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+    animation: pulse-glow 4s ease-in-out infinite;
+  }
+  @keyframes pulse-glow {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.08); opacity: 0.6; }
+  }
+
+  /* ── SVG BAGUA ── */
+  #bagua-svg {
+    width: 100%; height: 100%;
+    animation: spin-slow 40s linear infinite;
+    filter: drop-shadow(0 0 30px rgba(200,184,154,0.15));
+  }
+  @keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .bagua-outer-ring { fill: none; stroke: var(--accent); stroke-width: 1; opacity: 0.4; }
+  .bagua-inner-ring { fill: none; stroke: var(--accent); stroke-width: 0.5; opacity: 0.2; }
+  .bagua-center { fill: none; stroke: var(--accent); stroke-width: 1.5; opacity: 0.6; }
+  .trigram-line { stroke: var(--trigram); stroke-width: 3; stroke-linecap: round; }
+  .trigram-line.broken { opacity: 0.85; }
+  .bagua-text { fill: var(--accent); font-family: 'Noto Serif SC', serif; font-size: 11px; opacity: 0.7; }
+  .yin-yang-path { fill: var(--trigram); }
+  .yin-yang-path.inverse { fill: var(--bg); }
+
+  /* Taiji inner ring - counter-rotates */
+  #taiji-group {
+    transform-origin: 250px 250px;
+    animation: spin-slow-reverse 40s linear infinite;
+  }
+  @keyframes spin-slow-reverse {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+  }
+
+  /* ── RIGHT CONTENT ── */
+  .hero-content {
+    flex: 1;
+    padding: 0 4rem 0 2rem;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem; letter-spacing: 0.5em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    animation: fade-up 0.8s 0.3s forwards;
+  }
+
+  .hero-title-zh {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(3rem, 5vw, 5.5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: 0.15em;
+    color: var(--text);
+    opacity: 0;
+    animation: fade-up 0.8s 0.5s forwards;
+    margin-bottom: 0.3rem;
+  }
+  .hero-title-zh span {
+    display: block;
+    font-weight: 600;
+    color: var(--accent);
+    font-size: clamp(2rem, 3.5vw, 3.8rem);
+    letter-spacing: 0.2em;
+  }
+
+  .hero-title-en {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 1.6vw, 1.4rem);
+    color: var(--text-dim);
+    letter-spacing: 0.15em;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fade-up 0.8s 0.7s forwards;
+  }
+
+  .hero-divider {
+    width: 60px; height: 1px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fade-in 1s 0.9s forwards;
+  }
+
+  .hero-desc {
+    font-size: 0.88rem;
+    line-height: 2;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    max-width: 340px;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fade-up 0.8s 1s forwards;
+  }
+
+  /* ── ENTER BUTTON ── */
+  .enter-btn {
+    display: inline-flex; align-items: center; gap: 1rem;
+    background: none; border: none; cursor: pointer;
+    font-family: inherit; padding: 0;
+    opacity: 0;
+    animation: fade-up 0.8s 1.2s forwards;
+    transition: transform 0.3s;
+    width: fit-content;
+  }
+  .enter-btn:hover { transform: translateX(6px); }
+  .enter-btn:hover .enter-circle { border-color: var(--accent); background: var(--glow); }
+  .enter-btn:hover .enter-circle::after { transform: translateX(4px); }
+
+  .enter-circle {
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    border: 1px solid var(--text-faint);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .enter-circle::after {
+    content: '→';
+    color: var(--accent);
+    font-size: 1.2rem;
+    transition: transform 0.3s;
+  }
+
+  .enter-label {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    color: var(--text-dim);
+  }
+  .enter-label small {
+    display: block;
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    color: var(--text-faint);
+    font-family: 'Cinzel', serif;
+    margin-top: 0.2rem;
+  }
+
+  /* ── QUICK FEATURES ROW ── */
+  .feature-chips {
+    display: flex; flex-wrap: wrap; gap: 0.6rem;
+    margin-top: 2.5rem;
+    opacity: 0;
+    animation: fade-up 0.8s 1.4s forwards;
+  }
+
+  .chip {
+    font-size: 0.68rem; letter-spacing: 0.12em;
+    color: var(--text-faint);
+    border: 1px solid var(--border);
+    padding: 0.3rem 0.85rem;
+    border-radius: 1px;
+    transition: all 0.25s;
+    cursor: default;
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+  }
+  .chip:hover { color: var(--accent); border-color: var(--accent2); }
+
+  /* ── SCROLL INDICATOR ── */
+  .scroll-hint {
+    position: absolute; bottom: 2.5rem; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    opacity: 0;
+    animation: fade-in 1s 2s forwards;
+    z-index: 2;
+  }
+  .scroll-hint span {
+    font-size: 0.6rem; letter-spacing: 0.4em;
+    color: var(--text-faint);
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+  }
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(180deg, var(--accent2), transparent);
+    animation: scroll-drop 2s ease-in-out infinite;
+    transform-origin: top;
+  }
+  @keyframes scroll-drop {
+    0% { transform: scaleY(0); opacity: 0; }
+    40% { transform: scaleY(1); opacity: 1; }
+    100% { transform: scaleY(1) translateY(20px); opacity: 0; }
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative; z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 2.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
+
+  .footer-copy {
+    font-size: 0.65rem; letter-spacing: 0.2em;
+    color: var(--text-faint);
+    font-family: 'Cinzel', serif;
+  }
+
+  .footer-links {
+    display: flex; align-items: center; gap: 1.5rem;
+  }
+  .footer-link {
+    font-size: 0.65rem; letter-spacing: 0.15em;
+    color: var(--text-faint);
+    text-decoration: none;
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .footer-link:hover { color: var(--accent); }
+
+  .footer-social {
+    display: flex; gap: 0.8rem; align-items: center;
+  }
+  .social-btn {
+    width: 30px; height: 30px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    background: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--text-faint);
+    font-size: 0.75rem;
+    transition: all 0.25s;
+  }
+  .social-btn:hover { border-color: var(--accent2); color: var(--accent); }
+
+  /* ── CHECKIN TOAST ── */
+  .toast {
+    position: fixed; bottom: 5rem; right: 2rem; z-index: 200;
+    background: var(--surface);
+    border: 1px solid var(--accent2);
+    padding: 1rem 1.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    transform: translateY(20px); opacity: 0;
+    transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    pointer-events: none;
+    max-width: 240px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ── SHARE PANEL ── */
+  .share-panel {
+    position: fixed; top: 70px; right: 2rem; z-index: 200;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1.2rem;
+    border-radius: 4px;
+    width: 220px;
+    transform: translateY(-8px) scale(0.97); opacity: 0;
+    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    pointer-events: none;
+  }
+  .share-panel.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+  .share-panel h4 {
+    font-size: 0.7rem; letter-spacing: 0.3em;
+    color: var(--text-dim); margin-bottom: 1rem;
+    font-family: 'Cinzel', serif;
+  }
+  .share-row {
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+  }
+  .share-item {
+    flex: 1; min-width: 80px;
+    background: none; border: 1px solid var(--border);
+    color: var(--text-dim); cursor: pointer;
+    font-size: 0.65rem; letter-spacing: 0.1em;
+    padding: 0.5rem 0.4rem;
+    border-radius: 2px;
+    font-family: inherit;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .share-item:hover { border-color: var(--accent2); color: var(--accent); }
+
+  /* ── LANG DROPDOWN ── */
+  .lang-dropdown {
+    position: fixed; top: 70px; right: 2rem; z-index: 200;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    transform: translateY(-8px) scale(0.97); opacity: 0;
+    transition: all 0.3s;
+    pointer-events: none;
+    min-width: 120px;
+  }
+  .lang-dropdown.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+  .lang-item {
+    padding: 0.6rem 1rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-bottom: 1px solid var(--border);
+    font-family: 'Cinzel', serif;
+  }
+  .lang-item:last-child { border-bottom: none; }
+  .lang-item:hover { background: var(--glow); color: var(--accent); }
+  .lang-item.active { color: var(--accent); }
+
+  /* ── VERTICAL TEXT (decorative) ── */
+  .vert-text {
+    position: absolute;
+    left: 1.5rem; top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    transform-origin: center;
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.5em;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0;
+    animation: fade-in 1s 1.5s forwards;
+  }
+
+  /* ── SECTION: SERVICES ── */
+  .services-section {
+    position: relative; z-index: 1;
+    padding: 7rem 2.5rem 5rem;
+  }
+
+  .section-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.65rem;
+    letter-spacing: 0.6em;
+    color: var(--accent2);
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, var(--border), transparent);
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1px;
+    border: 1px solid var(--border);
+    background: var(--border);
+  }
+
+  .service-card {
+    background: var(--bg);
+    padding: 2.5rem 2rem;
+    transition: background 0.3s;
+    cursor: pointer;
+    position: relative; overflow: hidden;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  .service-card:hover { background: var(--surface); }
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .card-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3.5rem; font-weight: 300;
+    color: var(--text-faint);
+    line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+  .card-title-zh {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 1.3rem;
+    color: var(--text);
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.1em;
+  }
+  .card-title-en {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.8rem;
+    color: var(--text-faint);
+    letter-spacing: 0.2em;
+    margin-bottom: 1.2rem;
+  }
+  .card-desc {
+    font-size: 0.8rem;
+    line-height: 1.9;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    #hero { flex-direction: column; align-items: center; padding-top: 70px; }
+    .bagua-side { width: 100%; height: auto; padding: 3rem 0 1.5rem; }
+    .bagua-wrapper { width: min(260px, 70vw); height: min(260px, 70vw); }
+    .hero-content { padding: 1.5rem 2rem 3rem; text-align: center; align-items: center; }
+    .hero-desc { max-width: 100%; }
+    .vert-text { display: none; }
+    nav { padding: 0 1rem; }
+    .nav-btn span { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav>
+  <div class="nav-logo">玄機 · Xuan Ji</div>
+  <div class="nav-actions">
+    <!-- Sign In -->
+    <button class="nav-btn" onclick="handleCheckin(this)">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+      </svg>
+      <span>签到</span>
+    </button>
+
+    <div class="nav-divider"></div>
+
+    <!-- Share -->
+    <button class="nav-btn" id="shareBtn" onclick="toggleShare(this)">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+      </svg>
+      <span>分享</span>
+    </button>
+
+    <!-- Language -->
+    <button class="nav-btn" id="langBtn" onclick="toggleLang(this)">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      </svg>
+      <span id="langLabel">中文</span>
+    </button>
+
+    <div class="nav-divider"></div>
+
+    <!-- Theme Toggle -->
+    <button class="nav-btn" id="themeBtn" onclick="toggleTheme()">
+      <svg id="themeIcon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+      <span id="themeLabel">暗色</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ── SHARE PANEL ── -->
+<div class="share-panel" id="sharePanel">
+  <h4>SHARE · 分享</h4>
+  <div class="share-row">
+    <button class="share-item" onclick="copyLink()">🔗 复制链接</button>
+    <button class="share-item" onclick="shareWechat()">💬 微信</button>
+    <button class="share-item" onclick="shareWeibo()">🐦 微博</button>
+    <button class="share-item" onclick="shareX()">✕ X / Twitter</button>
+  </div>
+</div>
+
+<!-- ── LANG DROPDOWN ── -->
+<div class="lang-dropdown" id="langDropdown">
+  <div class="lang-item active" onclick="setLang('zh')">中文 · Chinese</div>
+  <div class="lang-item" onclick="setLang('en')">English</div>
+  <div class="lang-item" onclick="setLang('ja')">日本語</div>
+</div>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <!-- LEFT: BAGUA -->
+  <div class="bagua-side">
+    <div class="vert-text">Cosmos · 天地 · Divination</div>
+    <div class="bagua-wrapper">
+      <svg id="bagua-svg" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(200,184,154,0.05)"/>
+            <stop offset="100%" stop-color="rgba(200,184,154,0)"/>
+          </radialGradient>
+        </defs>
+
+        <!-- Background -->
+        <circle cx="250" cy="250" r="245" fill="url(#bgGrad)" />
+
+        <!-- Outer rings -->
+        <circle cx="250" cy="250" r="244" class="bagua-outer-ring"/>
+        <circle cx="250" cy="250" r="238" class="bagua-inner-ring"/>
+        <circle cx="250" cy="250" r="195" class="bagua-inner-ring" opacity="0.15"/>
+        <circle cx="250" cy="250" r="140" class="bagua-inner-ring" opacity="0.2"/>
+        <circle cx="250" cy="250" r="80" class="bagua-inner-ring" opacity="0.3"/>
+
+        <!-- Dividing lines (8 sectors) -->
+        <g stroke="var(--accent)" stroke-width="0.5" opacity="0.15">
+          <line x1="250" y1="6" x2="250" y2="494"/>
+          <line x1="6" y1="250" x2="494" y2="250"/>
+          <line x1="62" y1="62" x2="438" y2="438"/>
+          <line x1="438" y1="62" x2="62" y2="438"/>
+        </g>
+
+        <!-- Trigrams (八卦 lines) — 8 positions around the circle -->
+        <!-- Each position: 3 horizontal lines (solid or broken) -->
+        <!-- Position angles: N=270, NE=315, E=0, SE=45, S=90, SW=135, W=180, NW=225 -->
+
+        <!-- ☰ 乾 (Heaven) - N — 3 solid lines -->
+        <g transform="translate(250,250) rotate(0) translate(0,-215)">
+          <line x1="-22" y1="-10" x2="22" y2="-10" class="trigram-line"/>
+          <line x1="-22" y1="0" x2="22" y2="0" class="trigram-line"/>
+          <line x1="-22" y1="10" x2="22" y2="10" class="trigram-line"/>
+          <text x="0" y="30" class="bagua-text" text-anchor="middle">乾</text>
+        </g>
+
+        <!-- ☷ 坤 (Earth) - S — 3 broken lines -->
+        <g transform="translate(250,250) rotate(180) translate(0,-215)">
+          <line x1="-22" y1="-10" x2="-5" y2="-10" class="trigram-line broken"/>
+          <line x1="5" y1="-10" x2="22" y2="-10" class="trigram-line broken"/>
+          <line x1="-22" y1="0" x2="-5" y2="0" class="trigram-line broken"/>
+          <line x1="5" y1="0" x2="22" y2="0" class="trigram-line broken"/>
+          <line x1="-22" y1="10" x2="-5" y2="10" class="trigram-line broken"/>
+          <line x1="5" y1="10" x2="22" y2="10" class="trigram-line broken"/>
+          <text x="0" y="30" class="bagua-text" text-anchor="middle">坤</text>
+        </g>
+
+        <!-- ☵ 坎 (Water) - W — broken solid broken -->
+        <g transform="translate(250,250) rotate(270) translate(0,-215)">
+          <line x1="-22" y1="-10" x2="-5" y2="-10" class="trigram-line broken"/>
+          <line x1="5" y1="-10" x2="22" y2="-10" class="trigram-line broken"/>
+          <line x1="-22" y1="0" x2="22" y2="0" class="trigram-line"/>
+          <line x1="-22" y1="10" x2="-5" y2="10" class="trigram-line broken"/>
+          <line x1="5" y1="10" x2="22" y2="10" class="trigram-line broken"/>
+          <text x="0" y="30" class="bagua-text" text-anchor="middle">坎</text>
+        </g>
+
+        <!-- ☲ 离 (Fire) - E — solid broken solid -->
+        <g transform="translate(250,250) rotate(90) translate(0,-215)">
+          <line x1="-22" y1="-10" x2="22" y2="-10" class="trigram-line"/>
+          <line x1="-22" y1="0" x2="-5" y2="0" class="trigram-line broken"/>
+          <line x1="5" y1="0" x2="22" y2="0" class="trigram-line broken"/>
+          <line x1="-22" y1="10" x2="22" y2="10" class="trigram-line"/>
+          <text x="0" y="30" class="bagua-text" text-anchor="middle">离</text>
+        </g>
+
+        <!-- ☳ 震 (Thunder) - NE — broken broken solid -->
+        <g transform="translate(250,250) rotate(45) translate(0,-215)">
+          <line x1="-22" y1="-10" x2="-5" y2="-10" class="trigram-line broken"/>
+          <line x1="5" y1="-10" x2="22" y2="-10" class="trigram-line broken"/>
+          <line x1="-22" y1="0" x2="-5" y2="0" class="trigram-line broken"/>
+          <line x1="5" y1="0" x2="22" y2="0" class="trigram-line broken"/>
+          <line x1="-22" y1="10" x2="22" y2="10" class="trigram-line"/>
+          <text x="0" y="30" class="bagua-text" text-anchor="middle">震</text>
+        </g>
+
+        <!-- ☴ 巽 (Wind) - SW — solid broken broken -->
+        <g transform="translate(250,250) rotate(225) translate(0,-215)">
+          <line x1="-22" y1="-10" x2="22" y2="-10" class="trigram-line"/>
+          <line x1="-22" y1="0" x2="-5" y2="0" class="trigram-line broken"/>
+          <line x1="5" y1="0" x2="22" y2="0" class="trigram-line broken"/>
+          <line x1="-22" y1="10" x2="-5" y2="10" class="trigram-line broken"/>
+          <line x1="5" y1="10" x2="22" y2="10" class="trigram-line broken"/>
+          <text x="0" y="30" class="bagua-text" text-anchor="middle">巽</text>
+        </g>
+
+        <!-- ☶ 艮 (Mountain) - NW — solid broken broken reversed -->
+        <g transform="translate(250,250) rotate(315) translate(0,-215)">
+          <line x1="-22" y1="-10" x2="22" y2="-10" class="trigram-line"/>
+          <line x1="-22" y1="0" x2="-5" y2="0" class="trigram-line broken"/>
+          <line x1="5" y1="0" x2="22" y2="0" class="trigram-line broken"/>
+          <line x1="-22" y1="10" x2="22" y2="10" class="trigram-line"/>
+          <text x="0" y="30" class="bagua-text" text-anchor="middle">艮</text>
+        </g>
+
+        <!-- ☱ 兑 (Lake) - SE — broken solid solid -->
+        <g transform="translate(250,250) rotate(135) translate(0,-215)">
+          <line x1="-22" y1="-10" x2="-5" y2="-10" class="trigram-line broken"/>
+          <line x1="5" y1="-10" x2="22" y2="-10" class="trigram-line broken"/>
+          <line x1="-22" y1="0" x2="22" y2="0" class="trigram-line"/>
+          <line x1="-22" y1="10" x2="22" y2="10" class="trigram-line"/>
+          <text x="0" y="30" class="bagua-text" text-anchor="middle">兑</text>
+        </g>
+
+        <!-- Taiji (Yin-Yang) in center — counter-rotates -->
+        <g id="taiji-group">
+          <!-- Outer circle -->
+          <circle cx="250" cy="250" r="72" fill="var(--trigram)" opacity="0.9"/>
+          <!-- White half -->
+          <path d="M250,178 A72,72 0 0,1 250,322 A36,36 0 0,1 250,250 A36,36 0 0,0 250,178 Z" fill="var(--bg)" opacity="0.95"/>
+          <!-- Small circles -->
+          <circle cx="250" cy="214" r="12" fill="var(--trigram)"/>
+          <circle cx="250" cy="286" r="12" fill="var(--bg)" opacity="0.95"/>
+          <!-- Border ring -->
+          <circle cx="250" cy="250" r="72" fill="none" stroke="var(--accent)" stroke-width="1" opacity="0.4"/>
+        </g>
+
+        <!-- Outer decorative ring with tick marks -->
+        <g opacity="0.25">
+          <circle cx="250" cy="250" r="220" fill="none" stroke="var(--accent)" stroke-width="0.5" stroke-dasharray="2 10"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- RIGHT: CONTENT -->
+  <div class="hero-content">
+    <div class="hero-eyebrow">AI · 玄學 · Fortune · 命理</div>
+
+    <h1 class="hero-title-zh">
+      洞悉<br>
+      <span>天機</span>
+    </h1>
+    <p class="hero-title-en">Illuminate the Unseen · AI Tarot & I-Ching</p>
+
+    <div class="hero-divider"></div>
+
+    <p class="hero-desc">
+      融合古代易经八卦与现代人工智能，<br>
+      为您解读命运的密语，<br>
+      指引前行的方向。
+    </p>
+
+    <button class="enter-btn" onclick="enterSite()">
+      <div class="enter-circle"></div>
+      <div class="enter-label">
+        进入玄机
+        <small>Enter the Oracle</small>
+      </div>
+    </button>
+
+    <div class="feature-chips">
+      <span class="chip">AI 塔罗</span>
+      <span class="chip">八卦占卜</span>
+      <span class="chip">流年运势</span>
+      <span class="chip">命盘解析</span>
+      <span class="chip">每日卦象</span>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ── SERVICES SECTION ── -->
+<section class="services-section">
+  <div class="section-label">占卜服务 · Divination Services</div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="card-num">01</div>
+      <div class="card-title-zh">塔罗牌阵</div>
+      <div class="card-title-en">AI Tarot Reading</div>
+      <div class="card-desc">运用人工智能解读塔罗牌阵，融合心理学与神秘学，为您揭示内心深处的答案。</div>
+    </div>
+    <div class="service-card">
+      <div class="card-num">02</div>
+      <div class="card-title-zh">六十四卦</div>
+      <div class="card-title-en">I-Ching Oracle</div>
+      <div class="card-desc">传承三千年的易经智慧，以AI精准演算卦象，洞察变化之道，把握时机之门。</div>
+    </div>
+    <div class="service-card">
+      <div class="card-num">03</div>
+      <div class="card-title-zh">紫微斗数</div>
+      <div class="card-title-en">Purple Star Astrology</div>
+      <div class="card-desc">依据出生时辰推算紫微命盘，AI深度解析十二宫位，解读一生运势轨迹。</div>
+    </div>
+    <div class="service-card">
+      <div class="card-num">04</div>
+      <div class="card-title-zh">每日运势</div>
+      <div class="card-title-en">Daily Fortune</div>
+      <div class="card-desc">每日更新的卦象与星象分析，把握当日能量流动，趋吉避凶，顺势而为。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-copy">© 2025 玄機 · XUAN JI · All Rights Reserved</div>
+  <div class="footer-links">
+    <a href="#" class="footer-link">关于我们</a>
+    <a href="#" class="footer-link">隐私政策</a>
+    <a href="#" class="footer-link">联系我们</a>
+  </div>
+  <div class="footer-social">
+    <button class="social-btn" title="微信" onclick="shareWechat()">微</button>
+    <button class="social-btn" title="微博" onclick="shareWeibo()">博</button>
+    <button class="social-btn" title="X/Twitter" onclick="shareX()">𝕏</button>
+  </div>
+</footer>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toast"></div>
+
+<script>
+  /* ── THEME ── */
+  let isDark = true;
+  function toggleTheme() {
+    isDark = !isDark;
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+    document.getElementById('themeLabel').textContent = isDark ? '暗色' : '亮色';
+    const icon = document.getElementById('themeIcon');
+    icon.innerHTML = isDark
+      ? '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>'
+      : '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+  }
+
+  /* ── CHECKIN ── */
+  let checkedIn = false;
+  function handleCheckin(btn) {
+    if (checkedIn) { showToast('今日已签到 ✓\nAlready checked in today'); return; }
+    checkedIn = true;
+    btn.classList.add('active');
+    const today = new Date().toLocaleDateString('zh-CN');
+    showToast(`✦ 签到成功！\n${today}\n今日运势正在开启…`);
+  }
+
+  /* ── SHARE ── */
+  let shareOpen = false;
+  function toggleShare(btn) {
+    shareOpen = !shareOpen;
+    document.getElementById('sharePanel').classList.toggle('open', shareOpen);
+    document.getElementById('langDropdown').classList.remove('open');
+    langOpen = false;
+    btn.classList.toggle('active', shareOpen);
+  }
+  function copyLink() {
+    navigator.clipboard.writeText(window.location.href).catch(() => {});
+    showToast('链接已复制\nLink copied!');
+    closeShare();
+  }
+  function shareWechat() { showToast('请截图分享至微信\nScreenshot to share on WeChat'); closeShare(); }
+  function shareWeibo() { window.open('https://service.weibo.com/share/share.php?url=' + encodeURIComponent(location.href) + '&title=玄機·AI塔罗八卦运势', '_blank'); closeShare(); }
+  function shareX() { window.open('https://twitter.com/intent/tweet?text=玄機·AI塔罗八卦运势&url=' + encodeURIComponent(location.href), '_blank'); closeShare(); }
+  function closeShare() { shareOpen = false; document.getElementById('sharePanel').classList.remove('open'); document.getElementById('shareBtn').classList.remove('active'); }
+
+  /* ── LANGUAGE ── */
+  let langOpen = false;
+  function toggleLang(btn) {
+    langOpen = !langOpen;
+    document.getElementById('langDropdown').classList.toggle('open', langOpen);
+    document.getElementById('sharePanel').classList.remove('open');
+    shareOpen = false;
+    document.getElementById('shareBtn').classList.remove('active');
+  }
+  function setLang(code) {
+    const map = { zh: '中文', en: 'EN', ja: '日本語' };
+    document.getElementById('langLabel').textContent = map[code];
+    document.querySelectorAll('.lang-item').forEach(el => el.classList.remove('active'));
+    event.target.classList.add('active');
+    langOpen = false;
+    document.getElementById('langDropdown').classList.remove('open');
+    showToast(code === 'zh' ? '已切换为中文' : code === 'en' ? 'Switched to English' : '日本語に切り替えました');
+  }
+
+  /* ── ENTER SITE ── */
+  function enterSite() { showToast('✦ 正在进入玄机…\nEntering the Oracle…'); }
+
+  /* ── TOAST ── */
+  let toastTimer;
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.innerHTML = msg.replace(/\n/g, '<br>');
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  /* ── CLOSE PANELS ON OUTSIDE CLICK ── */
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#shareBtn') && !e.target.closest('#sharePanel')) { closeShare(); }
+    if (!e.target.closest('#langBtn') && !e.target.closest('#langDropdown')) {
+      langOpen = false;
+      document.getElementById('langDropdown').classList.remove('open');
+    }
+  });
+
+  /* ── BAGUA HOVER PAUSE ── */
+  document.querySelector('.bagua-wrapper').addEventListener('mouseenter', () => {
+    document.getElementById('bagua-svg').style.animationPlayState = 'paused';
+  });
+  document.querySelector('.bagua-wrapper').addEventListener('mouseleave', () => {
+    document.getElementById('bagua-svg').style.animationPlayState = 'running';
+  });
+</script>
+</body>
+</html>

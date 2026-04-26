@@ -1,0 +1,67 @@
+{
+  "nav": {
+    "logo": "Xuan Ji",
+    "checkin": "Check In",
+    "share": "Share",
+    "language": "Language",
+    "theme": { "dark": "Dark", "light": "Light" }
+  },
+  "hero": {
+    "eyebrow": "AI · Mysticism · Destiny · Divination",
+    "title": "Illuminate",
+    "titleAccent": "the Unseen",
+    "subtitle": "洞悉天機 · AI Tarot & I-Ching",
+    "description": "Where ancient I-Ching wisdom meets modern AI —\ndecoding the language of fate,\nguiding your path forward.",
+    "enter": "Enter the Oracle",
+    "enterSub": "Begin Your Reading"
+  },
+  "chips": {
+    "tarot": "AI Tarot",
+    "bagua": "I-Ching",
+    "horoscope": "Annual Fortune",
+    "chart": "Birth Chart",
+    "daily": "Daily Hexagram"
+  },
+  "services": {
+    "label": "Divination Services",
+    "tarot":  { "title": "Tarot Spread",          "subtitle": "AI Tarot Reading",        "desc": "AI-powered tarot readings that blend psychology and mysticism to reveal the answers within." },
+    "bagua":  { "title": "64 Hexagrams",           "subtitle": "I-Ching Oracle",           "desc": "Three millennia of I-Ching wisdom, algorithmically cast to illuminate the currents of change." },
+    "ziwei":  { "title": "Purple Star",            "subtitle": "Purple Star Astrology",    "desc": "Your birth chart calculated to the hour — AI decodes all twelve palaces of your destiny." },
+    "daily":  { "title": "Daily Fortune",          "subtitle": "Daily Fortune",            "desc": "Fresh hexagram and stellar analysis every day, helping you move with the flow of cosmic energy." }
+  },
+  "share": {
+    "title": "Share",
+    "copy": "Copy Link",
+    "wechat": "WeChat",
+    "weibo": "Weibo",
+    "x": "X / Twitter"
+  },
+  "checkin": {
+    "success": "Checked in!",
+    "already": "Already checked in today ✓",
+    "prompt": "Your daily fortune is awakening…"
+  },
+  "personality": {
+    "title": "Bagua Archetype",
+    "subtitle": "Discover your cosmic personality",
+    "cta": "Take the Test",
+    "result": "Your archetype is"
+  },
+  "reading": {
+    "question": "What is your question?",
+    "placeholder": "I'd like to know about…",
+    "submit": "Divine",
+    "loading": "The oracle is reading…",
+    "error": "Reading failed, please try again"
+  },
+  "footer": {
+    "copyright": "© 2025 玄機 · XUAN JI · All Rights Reserved",
+    "about": "About",
+    "privacy": "Privacy Policy",
+    "contact": "Contact"
+  },
+  "error": {
+    "notFound": "This page lies beyond the chart",
+    "back": "Return Home"
+  }
+}

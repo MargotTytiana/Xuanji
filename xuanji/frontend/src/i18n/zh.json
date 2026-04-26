@@ -1,0 +1,67 @@
+{
+  "nav": {
+    "logo": "玄機",
+    "checkin": "签到",
+    "share": "分享",
+    "language": "语言",
+    "theme": { "dark": "暗色", "light": "亮色" }
+  },
+  "hero": {
+    "eyebrow": "AI · 玄學 · 命理 · 占卜",
+    "title": "洞悉",
+    "titleAccent": "天機",
+    "subtitle": "Illuminate the Unseen · AI Tarot & I-Ching",
+    "description": "融合古代易经八卦与现代人工智能，\n为您解读命运的密语，\n指引前行的方向。",
+    "enter": "进入玄机",
+    "enterSub": "Enter the Oracle"
+  },
+  "chips": {
+    "tarot": "AI 塔罗",
+    "bagua": "八卦占卜",
+    "horoscope": "流年运势",
+    "chart": "命盘解析",
+    "daily": "每日卦象"
+  },
+  "services": {
+    "label": "占卜服务",
+    "tarot":  { "title": "塔罗牌阵", "subtitle": "AI Tarot Reading",        "desc": "运用人工智能解读塔罗牌阵，融合心理学与神秘学，为您揭示内心深处的答案。" },
+    "bagua":  { "title": "六十四卦", "subtitle": "I-Ching Oracle",           "desc": "传承三千年的易经智慧，以AI精准演算卦象，洞察变化之道，把握时机之门。" },
+    "ziwei":  { "title": "紫微斗数", "subtitle": "Purple Star Astrology",    "desc": "依据出生时辰推算紫微命盘，AI深度解析十二宫位，解读一生运势轨迹。" },
+    "daily":  { "title": "每日运势", "subtitle": "Daily Fortune",            "desc": "每日更新的卦象与星象分析，把握当日能量流动，趋吉避凶，顺势而为。" }
+  },
+  "share": {
+    "title": "分享",
+    "copy": "复制链接",
+    "wechat": "微信",
+    "weibo": "微博",
+    "x": "X / Twitter"
+  },
+  "checkin": {
+    "success": "签到成功！",
+    "already": "今日已签到 ✓",
+    "prompt": "今日运势正在开启…"
+  },
+  "personality": {
+    "title": "八卦人格",
+    "subtitle": "测试你的命盘原型",
+    "cta": "开始测试",
+    "result": "你的原型是"
+  },
+  "reading": {
+    "question": "请输入你的问题",
+    "placeholder": "我想了解关于…",
+    "submit": "占卜",
+    "loading": "天机演算中…",
+    "error": "占卜失败，请重试"
+  },
+  "footer": {
+    "copyright": "© 2025 玄機 · XUAN JI · All Rights Reserved",
+    "about": "关于我们",
+    "privacy": "隐私政策",
+    "contact": "联系我们"
+  },
+  "error": {
+    "notFound": "此页面不在命盘之中",
+    "back": "返回首页"
+  }
+}

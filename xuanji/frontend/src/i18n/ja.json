@@ -1,0 +1,67 @@
+{
+  "nav": {
+    "logo": "玄機",
+    "checkin": "チェックイン",
+    "share": "シェア",
+    "language": "言語",
+    "theme": { "dark": "ダーク", "light": "ライト" }
+  },
+  "hero": {
+    "eyebrow": "AI · 玄学 · 運命 · 占い",
+    "title": "天機を",
+    "titleAccent": "見通す",
+    "subtitle": "Illuminate the Unseen · AI タロット & 易経",
+    "description": "古代の易経とAIが融合し、\n運命の言葉を解き明かし、\n進むべき道を照らします。",
+    "enter": "玄機へ入る",
+    "enterSub": "Begin Your Reading"
+  },
+  "chips": {
+    "tarot": "AI タロット",
+    "bagua": "八卦占い",
+    "horoscope": "年間運勢",
+    "chart": "命盤解析",
+    "daily": "今日の卦"
+  },
+  "services": {
+    "label": "占いサービス",
+    "tarot":  { "title": "タロット展開",    "subtitle": "AI Tarot Reading",        "desc": "AIがタロット牌陣を解読し、心理学と神秘学を融合させて、内なる答えを明らかにします。" },
+    "bagua":  { "title": "六十四卦",        "subtitle": "I-Ching Oracle",           "desc": "三千年の易経の智慧をAIが精密に演算し、変化の道理を洞察し、好機の扉を開きます。" },
+    "ziwei":  { "title": "紫微斗数",        "subtitle": "Purple Star Astrology",    "desc": "生まれた時刻から命盤を算出し、AIが十二宮を深く解析して一生の運勢を読み解きます。" },
+    "daily":  { "title": "今日の運勢",      "subtitle": "Daily Fortune",            "desc": "毎日更新される卦と星象の分析で、その日のエネルギーの流れを把握し、吉運を引き寄せます。" }
+  },
+  "share": {
+    "title": "シェア",
+    "copy": "リンクをコピー",
+    "wechat": "WeChat",
+    "weibo": "Weibo",
+    "x": "X / Twitter"
+  },
+  "checkin": {
+    "success": "チェックイン完了！",
+    "already": "本日はチェックイン済み ✓",
+    "prompt": "今日の運勢が開かれています…"
+  },
+  "personality": {
+    "title": "八卦人格",
+    "subtitle": "あなたの命盤原型を発見する",
+    "cta": "テストを始める",
+    "result": "あなたの原型は"
+  },
+  "reading": {
+    "question": "ご質問を入力してください",
+    "placeholder": "知りたいことは…",
+    "submit": "占う",
+    "loading": "天機を演算中…",
+    "error": "占いに失敗しました。もう一度お試しください"
+  },
+  "footer": {
+    "copyright": "© 2025 玄機 · XUAN JI · All Rights Reserved",
+    "about": "私たちについて",
+    "privacy": "プライバシーポリシー",
+    "contact": "お問い合わせ"
+  },
+  "error": {
+    "notFound": "このページは命盤の外にあります",
+    "back": "ホームに戻る"
+  }
+}
