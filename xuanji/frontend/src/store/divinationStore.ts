@@ -1,21 +1,21 @@
-
-// ── store/divinationStore.ts ─────────────────────────────────
 import { create } from 'zustand'
- 
+import { persist } from 'zustand/middleware'
+import type { DivinationType } from '@/types'
+
 interface DivinationEntry {
-  id: string
-  type: 'tarot' | 'bagua' | 'personality'
-  question: string
-  result: string
+  id:        string
+  type:      DivinationType
+  question:  string
+  result:    string
   timestamp: number
 }
- 
+
 interface DivinationStore {
-  history: DivinationEntry[]
-  addEntry: (entry: Omit<DivinationEntry, 'id' | 'timestamp'>) => void
+  history:      DivinationEntry[]
+  addEntry:     (entry: Omit<DivinationEntry, 'id' | 'timestamp'>) => void
   clearHistory: () => void
 }
- 
+
 export const useDivinationStore = create<DivinationStore>()(
   persist(
     (set) => ({
@@ -25,7 +25,7 @@ export const useDivinationStore = create<DivinationStore>()(
           history: [
             { ...entry, id: crypto.randomUUID(), timestamp: Date.now() },
             ...s.history,
-          ].slice(0, 50),   // keep last 50 readings
+          ].slice(0, 50),
         })),
       clearHistory: () => set({ history: [] }),
     }),

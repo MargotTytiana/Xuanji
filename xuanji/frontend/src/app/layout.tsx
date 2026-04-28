@@ -1,30 +1,8 @@
 import type { Metadata, Viewport } from 'next'
-import { Noto_Serif_SC, Cinzel, Cormorant_Garamond } from 'next/font/google'
 import './globals.css'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 
-const notoSerifSC = Noto_Serif_SC({
-  subsets: ['latin'],
-  weight: ['300', '400', '600', '700'],
-  variable: '--font-noto',
-  display: 'swap',
-})
-
-const cinzel = Cinzel({
-  subsets: ['latin'],
-  weight: ['400', '600'],
-  variable: '--font-cinzel',
-  display: 'swap',
-})
-
-const cormorant = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['300', '400', '600'],
-  style: ['normal', 'italic'],
-  variable: '--font-cormorant',
-  display: 'swap',
-})
 
 export const metadata: Metadata = {
   title: {
@@ -54,17 +32,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html
-      lang="zh-CN"
-      data-theme="dark"
-      className={`${notoSerifSC.variable} ${cinzel.variable} ${cormorant.variable}`}
-      suppressHydrationWarning  // allows client-side theme injection without mismatch
-    >
-      <body>
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
-      </body>
+    <html lang="zh-CN" data-theme="dark" suppressHydrationWarning>
     </html>
   )
 }

@@ -1,43 +1,25 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from ...core.database import get_db
-from ...services.user_service import create_user, authenticate_user, get_user_by_id
-from ...core.security import create_access_token, get_current_user
+from ...services.user_service import register, login
 
 router = APIRouter()
 
-
 class RegisterRequest(BaseModel):
-    email: EmailStr
+    username: str
+    email:    str
     password: str
-    nickname: str = "玄機探索者"
-
 
 class LoginRequest(BaseModel):
-    email: EmailStr
+    username: str
     password: str
 
-
 @router.post("/register", status_code=status.HTTP_201_CREATED)
-async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)):
-    user = await create_user(db, body.email, body.password, body.nickname)
-    return {"id": user.id, "email": user.email, "nickname": user.nickname}
-
+async def register_route(req: RegisterRequest, db: AsyncSession = Depends(get_db)):
+    user = await register(db, req.username, req.email, req.password)
+    return {"message": "注册成功", "id": user.id, "username": user.username}
 
 @router.post("/login")
-async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)):
-    user = await authenticate_user(db, body.email, body.password)
-    if not user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
-    token = create_access_token({"sub": str(user.id)})
-    return {"access_token": token, "token_type": "bearer"}
-
-
-@router.get("/me")
-async def me(current_user=Depends(get_current_user)):
-    return {
-        "id": current_user.id,
-        "email": current_user.email,
-        "nickname": current_user.nickname,
-    }
+async def login_route(req: LoginRequest, db: AsyncSession = Depends(get_db)):
+    return await login(db, req.username, req.password)

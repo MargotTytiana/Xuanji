@@ -1,3 +1,4 @@
+'use client'
 import BaguaWheel from '@/components/ui/BaguaWheel'
 
 export default function HeroSection() {
