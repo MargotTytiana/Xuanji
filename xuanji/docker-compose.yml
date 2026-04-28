@@ -26,6 +26,7 @@ services:
     build: ./frontend
     ports: ["3000:3000"]
     env_file: ./frontend/.env.local
+    command: npm run dev
     depends_on: [backend]
     volumes:
       - ./frontend:/app         # sync host code into container

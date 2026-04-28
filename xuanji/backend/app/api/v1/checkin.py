@@ -1,26 +1,19 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
-from ...core.database import get_db
-from ...core.security import get_current_user
-from ...services.user_service import get_checkin_status, do_checkin
+from fastapi import APIRouter, Header, HTTPException
+from datetime import date
 
 router = APIRouter()
 
-
-@router.get("/status")
-async def checkin_status(
-    current_user=Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
-):
-    return await get_checkin_status(db, current_user.id)
-
+_store: dict[str, str] = {}
 
 @router.post("/")
-async def checkin(
-    current_user=Depends(get_current_user),
-    db: AsyncSession = Depends(get_db),
-):
-    result = await do_checkin(db, current_user.id)
-    if not result:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Already checked in today")
-    return result
+async def checkin(x_user_id: str = Header(default="anonymous")):
+    today = str(date.today())
+    if _store.get(x_user_id) == today:
+        raise HTTPException(status_code=400, detail="今日已签到")
+    _store[x_user_id] = today
+    return {"date": today, "message": "签到成功"}
+
+@router.get("/status")
+async def checkin_status(x_user_id: str = Header(default="anonymous")):
+    today = str(date.today())
+    return {"checked_in": _store.get(x_user_id) == today}
