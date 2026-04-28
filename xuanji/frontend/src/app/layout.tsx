@@ -3,7 +3,6 @@ import './globals.css'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 
-
 export const metadata: Metadata = {
   title: {
     default: '玄機 · AI塔罗八卦运势',
@@ -33,6 +32,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh-CN" data-theme="dark" suppressHydrationWarning>
+      <body>
+        <Navbar />
+        <main>{children}</main>
+        <Footer />
+      </body>
     </html>
   )
 }
