@@ -1,7 +1,3 @@
-# ============================================================
-#  docker-compose.yml
-# ============================================================
-
 services:
   postgres:
     image: postgres:16-alpine
@@ -22,12 +18,19 @@ services:
     env_file: ./backend/.env
     depends_on: [postgres, redis]
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./backend:/app          # sync host code into container
+      - /app/migrations         # preserve migrations generated inside container
 
   frontend:
     build: ./frontend
     ports: ["3000:3000"]
     env_file: ./frontend/.env.local
     depends_on: [backend]
+    volumes:
+      - ./frontend:/app         # sync host code into container
+      - /app/node_modules       # preserve node_modules installed in image
+      - /app/.next              # preserve build cache
 
 volumes:
   pgdata:
