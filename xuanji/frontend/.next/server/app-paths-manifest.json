@@ -1,0 +1,12 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/divination/route": "app/api/divination/route.js",
+  "/api/checkin/route": "app/api/checkin/route.js",
+  "/bagua/page": "app/bagua/page.js",
+  "/profile/page": "app/profile/page.js",
+  "/tarot/reading/[id]/page": "app/tarot/reading/[id]/page.js",
+  "/bagua/result/[type]/page": "app/bagua/result/[type]/page.js",
+  "/horoscope/page": "app/horoscope/page.js",
+  "/tarot/page": "app/tarot/page.js",
+  "/(home)/page": "app/(home)/page.js"
+}

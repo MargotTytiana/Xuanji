@@ -1,0 +1,12 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/api/divination/route": "/api/divination",
+  "/api/checkin/route": "/api/checkin",
+  "/bagua/page": "/bagua",
+  "/profile/page": "/profile",
+  "/tarot/reading/[id]/page": "/tarot/reading/[id]",
+  "/bagua/result/[type]/page": "/bagua/result/[type]",
+  "/horoscope/page": "/horoscope",
+  "/tarot/page": "/tarot",
+  "/(home)/page": "/"
+}

@@ -1,0 +1,89 @@
+{
+  "pages": {
+    "/_not-found/page": [
+      "static/chunks/webpack-a2a7106df7a920d1.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/493-425b01a2135ddb6f.js",
+      "static/chunks/main-app-fc3051b477dc027a.js",
+      "static/chunks/app/_not-found/page-6894958a2dd216e6.js"
+    ],
+    "/layout": [
+      "static/chunks/webpack-a2a7106df7a920d1.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/493-425b01a2135ddb6f.js",
+      "static/chunks/main-app-fc3051b477dc027a.js",
+      "static/css/be4bbc5fbac4b8cb.css",
+      "static/chunks/app/layout-d498a0aed10b7660.js"
+    ],
+    "/api/divination/route": [
+      "static/chunks/webpack-a2a7106df7a920d1.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/493-425b01a2135ddb6f.js",
+      "static/chunks/main-app-fc3051b477dc027a.js",
+      "static/chunks/app/api/divination/route-dedf0916f9a12aef.js"
+    ],
+    "/api/checkin/route": [
+      "static/chunks/webpack-a2a7106df7a920d1.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/493-425b01a2135ddb6f.js",
+      "static/chunks/main-app-fc3051b477dc027a.js",
+      "static/chunks/app/api/checkin/route-dedf0916f9a12aef.js"
+    ],
+    "/bagua/page": [
+      "static/chunks/webpack-a2a7106df7a920d1.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/493-425b01a2135ddb6f.js",
+      "static/chunks/main-app-fc3051b477dc027a.js",
+      "static/chunks/app/bagua/page-11f73c52e17e2374.js"
+    ],
+    "/profile/page": [
+      "static/chunks/webpack-a2a7106df7a920d1.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/493-425b01a2135ddb6f.js",
+      "static/chunks/main-app-fc3051b477dc027a.js",
+      "static/chunks/app/profile/page-09319fe36da3f31a.js"
+    ],
+    "/tarot/reading/[id]/page": [
+      "static/chunks/webpack-a2a7106df7a920d1.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/493-425b01a2135ddb6f.js",
+      "static/chunks/main-app-fc3051b477dc027a.js",
+      "static/chunks/app/tarot/reading/[id]/page-84d4acd4ca5db85b.js"
+    ],
+    "/bagua/result/[type]/page": [
+      "static/chunks/webpack-a2a7106df7a920d1.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/493-425b01a2135ddb6f.js",
+      "static/chunks/main-app-fc3051b477dc027a.js",
+      "static/chunks/app/bagua/result/[type]/page-206cf5a93b442058.js"
+    ],
+    "/horoscope/page": [
+      "static/chunks/webpack-a2a7106df7a920d1.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/493-425b01a2135ddb6f.js",
+      "static/chunks/main-app-fc3051b477dc027a.js",
+      "static/chunks/app/horoscope/page-b7d092ac5fbba089.js"
+    ],
+    "/tarot/page": [
+      "static/chunks/webpack-a2a7106df7a920d1.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/493-425b01a2135ddb6f.js",
+      "static/chunks/main-app-fc3051b477dc027a.js",
+      "static/chunks/app/tarot/page-f7a5aef0dde97a2c.js"
+    ],
+    "/(home)/layout": [
+      "static/chunks/webpack-a2a7106df7a920d1.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/493-425b01a2135ddb6f.js",
+      "static/chunks/main-app-fc3051b477dc027a.js",
+      "static/chunks/app/(home)/layout-dedf0916f9a12aef.js"
+    ],
+    "/(home)/page": [
+      "static/chunks/webpack-a2a7106df7a920d1.js",
+      "static/chunks/4bd1b696-c023c6e3521b1417.js",
+      "static/chunks/493-425b01a2135ddb6f.js",
+      "static/chunks/main-app-fc3051b477dc027a.js",
+      "static/chunks/app/(home)/page-4d2901e279dc8961.js"
+    ]
+  }
+}
