@@ -39,7 +39,6 @@ services:
     volumes:
       - ./frontend:/app         # sync host code into container
       - /app/node_modules       # preserve node_modules installed in image
-      - /app/.next              # preserve build cache
 
 volumes:
   pgdata:
